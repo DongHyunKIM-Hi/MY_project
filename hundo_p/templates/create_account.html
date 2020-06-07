@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>Hundo p 로그인</title>
+	<meta charset="UTF-8">
+	<!--===============================================================================================-->
+	<link rel="stylesheet" href="account.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
+		integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+	<link href="https://fonts.googleapis.com/css?family=Roboto:300,400" rel="stylesheet">
+	<!--===============================================================================================-->
+	<script>
+		function make_account() {
+			validate();
+		}
+		function validate() {
+			var id = $('#new_id').val();
+			var pw1 = $('#new_password1').val();
+			var pw2 = $('#new_password2').val();
+			var re2 = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+			var re = /^[a-zA-Z0-9]{4,12}$/
+			if (!re2.test(id)) {
+				alert("아이디를 형식에 맞게 입력해주세요");
+				$('#new_id').val('');
+				$('#new_id').focus();
+			}
+			else if (!re.test(pw1)) {
+				alert("형식에 맞게 비밀번호를 입력하세요");
+				$('#new_password1').val('');
+				$('#new_password1').focus();
+			}
+			else if (pw1 != pw2) {
+				alert("비밀번호가 다릅니다");
+				$('#new_password2').val('');
+				$('#new_password2').focus();
+			}
+		}
+	</script>
+	<!--===============================================================================================-->
+</head>
+
+<body>
+	<div id="form_wrapper">
+	
+			<span style="font-size: 60px; text-align: center; color: black;">회원 가입</span>
+		
+		<div class="input_container">
+			<i class="fas fa-envelope"></i>
+			<input placeholder="사용할 아이디를 입력하세요" type="text" id="new_id" class='input_field'>
+		</div>
+		<span>
+			아이디는 이메일 형식으로 입력해주세요
+		</span>
+		<div class="input_container">
+			<i class="fas fa-lock"></i>
+			<input placeholder="Password" type="password" id="new_password1" class='input_field'>
+		</div>
+		<span>
+			4~12길이의 영어랑 숫자로만 만드세요
+		</span>
+		<div class="input_container">
+			<i class="fas fa-lock"></i>
+			<input placeholder="Password 확인" type="password" id="new_password2" class='input_field'>
+		</div>
+		<input type="submit" value="회원가입" id='input_submit' class='input_field' onclick="validate()" style="margin-top: 100px;">
+	</div>
+</body>
+
+</html>
