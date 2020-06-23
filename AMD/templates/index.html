@@ -20,6 +20,26 @@
   <!-- Custom styles for this template -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/landing-page.css') }}">
   <script>
+    function get_keyword(){
+      let get_key = $('#get_key').val();
+      let get_year = $('#get_year').val();
+      if (get_key == '') {
+        alert("키워드를 입력해주세요");
+        $('#get_key').focus();
+        return false;
+     }
+    
+     $.ajax({
+              type: "POST",
+              url: "/input_keyword",
+              data: { 'key_give':get_key,'year_give':get_year },
+              success: function (response) {
+                  if (response['result'] == 'success') {
+                    alert(get_key+"를 등록하였습니다.")
+                  }
+              }
+          });
+    }
     function get_data() {
       let get_year = $('#get_year').val();
       let max = 2019;
@@ -27,6 +47,7 @@
       $('#movie_list').empty();
       $('#drama_list').empty();
       $('#music_list').empty();
+      $('#best_list').empty();
       if (get_year == '') {
         alert("가고 싶은 연도를 입력하세요");
         $('#get_year').focus();
@@ -38,7 +59,7 @@
         $('#get_year').focus();
         return false;
       }
-      alert(get_year)
+      alert(get_year+"로 떠납니다")
       $.ajax({
         type: "GET",
         url: "/list_movie?want_year=" + get_year,
@@ -52,7 +73,7 @@
               let img_url=movie['img_url']
               let temp_html = `
                           <div class="col-lg-4">
-                             <div class="testimonial-item mx-auto mb-5 mb-lg-0">
+                             <div class="testimonial-item mx-auto mb-5 mb-lg-0" onclick="agree_movie('${name}')">
                               <img class="img-fluid mb-3" src=${img_url} alt="">
                               <h5>${name}</h5>
                             </div>
@@ -77,7 +98,7 @@
               let img_url=drama['img_url']
               let temp_html = `
                           <div class="col-lg-4">
-                             <div class="testimonial-item mx-auto mb-5 mb-lg-0">
+                             <div class="testimonial-item mx-auto mb-5 mb-lg-0" onclick="agree_drama('${name}')">
                               <img class="img-fluid mb-3" src=${img_url} alt="">
                               <h5>${name}</h5>
                             </div>
@@ -103,7 +124,7 @@
               let singer=music['singer']
               let temp_html = `
                           <div class="col-lg-4">
-                             <div class="testimonial-item mx-auto mb-5 mb-lg-0">
+                             <div class="testimonial-item mx-auto mb-5 mb-lg-0" onclick="agree_music('${name}')">
                               <img class="img-fluid rounded-circle mb-3" src=${img_url} alt="">
                               <h5>${name}</h5>
                               <p class="font-weight-light mb-0">${singer}</p>
@@ -116,8 +137,139 @@
           }
         }
       });
+      $.ajax({
+        type: "GET",
+        url: "/best_list?want_year=" + get_year,
+        data: {},
+        success: function (response) {
+          if (response['result'] == 'success') {
+            let movie = response['movie'];
+            let drama = response['drama'];
+            let music = response['music'];
+            let temp_html = `
+                          <div class="col-lg-4">
+                             <div class="testimonial-item mx-auto mb-5 mb-lg-0">
+                              <img class="img-fluid mb-3" src=${movie[0]['img_url']} alt="">
+                              <h5>${movie[0]['name']}</h5>
+                              <p class="font-weight-light mb-0">공감:${movie[0]['like']}</p>
+                              <a href="https://www.youtube.com/results?search_query=${movie[0]['name']}"><i class="fab fa-instagram fa-2x fa-fw"></i></a>
+                            </div>
+                          </div>
+                          <div class="col-lg-4">
+                             <div class="testimonial-item mx-auto mb-5 mb-lg-0">
+                              <img class="img-fluid mb-3" src=${drama[0]['img_url']} alt="">
+                              <h5>${drama[0]['name']}</h5>
+                              <p class="font-weight-light mb-0">공감:${drama[0]['like']}</p>
+                              <a href="https://www.youtube.com/results?search_query=${drama[0]['name']}"><i class="fab fa-instagram fa-2x fa-fw"></i></a>
+                            </div>
+                          </div><div class="col-lg-4">
+                             <div class="testimonial-item mx-auto mb-5 mb-lg-0">
+                              <img class="img-fluid mb-3" src=${music[0]['img_url']} alt="">
+                              <h5>${music[0]['name']}</h5>
+                              <p class="font-weight-light mb-0">공감:${music[0]['like']}</p>
+                              <a href="https://www.youtube.com/results?search_query=${music[0]['name']}"><i class="fab fa-instagram fa-2x fa-fw"></i></a>
+                            </div>
+                          </div>`
+              $('#best_list').append(temp_html)
+            }
+           else {
+            alert('검색이 실패하였습니다.');
+          }
+        }
+      });
+      $.ajax({
+        type: "GET",
+        url: "/make_keyword?want_year=" + get_year,
+        data: {},
+        success: function (response) {
+          if (response['result'] == 'success') {
+            let keyword = response['keyword'];
+            let key=keyword['keyword_list'];
+            make_keyword(key);
+          } else {
+            alert('검색이 실패하였습니다.');
+          }
+        }
+      });
+      
     }
-
+  function agree_music(name){
+    $.ajax({
+              type: "POST",
+              url: "/music/like",
+              data: { 'name_give':name },
+              success: function (response) {
+                  if (response['result'] == 'success') {
+                    alert(name+"에 공감합니다")
+                  }
+              }
+          });
+  }
+  function agree_movie(name){
+    $.ajax({
+              type: "POST",
+              url: "/movie/like",
+              data: { 'name_give':name },
+              success: function (response) {
+                  if (response['result'] == 'success') {
+                    alert(name+"에 공감합니다")
+                  }
+              }
+          });
+  }
+  function agree_drama(name){
+    $.ajax({
+              type: "POST",
+              url: "/drama/like",
+              data: { 'name_give':name },
+              success: function (response) {
+                  if (response['result'] == 'success') {
+                    alert(name+"에 공감합니다")
+                  }
+              }
+          });
+  }
+  </script>
+  <!-- Resources -->
+  <script src="https://www.amcharts.com/lib/4/core.js"></script>
+  <script src="https://www.amcharts.com/lib/4/charts.js"></script>
+  <script src="https://www.amcharts.com/lib/4/plugins/wordCloud.js"></script>
+  <script src="https://www.amcharts.com/lib/4/themes/animated.js"></script>
+  
+  <!-- Chart code -->
+  <script>
+  function make_keyword(key) {
+  
+  // Themes begin
+  am4core.useTheme(am4themes_animated);
+  // Themes end
+  
+  
+  var chart = am4core.create("chartdiv", am4plugins_wordCloud.WordCloud);
+  var series = chart.series.push(new am4plugins_wordCloud.WordCloudSeries());
+  
+  series.accuracy = 4;
+  series.step = 15;
+  series.rotationThreshold = 0.7;
+  series.maxCount = 200;
+  series.minWordLength = 2;
+  series.labels.template.margin(4,4,4,4);
+  series.maxFontSize = am4core.percent(30);
+  
+  series.text = key; 
+  
+  series.colors = new am4core.ColorSet();
+  series.colors.passOptions = {}; // makes it loop
+  
+  //series.labelsContainer.rotation = 45;
+  series.angles = [0,-90];
+  series.fontWeight = "700"
+  
+  setInterval(function () {
+    series.dataItems.getIndex(Math.round(Math.random() * (series.dataItems.length - 1))).setValue("value", Math.round(Math.random() * 10));
+   }, 10000)
+  
+  }; // end am4core.ready()
   </script>
 </head>
 
@@ -158,6 +310,14 @@
   <!-- Testimonials -->
   <section class="testimonials text-center">
     <div class="container">
+      <h2 class="mb-5">BEST</h2>
+      <div class="row" id="best_list">
+
+      </div>
+    </div>
+  </section>
+  <section class="testimonials text-center">
+    <div class="container">
       <h2 class="mb-5">그때 그 영화</h2>
       <div class="row" id="movie_list">
 
@@ -187,16 +347,16 @@
     <div class="container">
       <div class="row">
         <div class="col-xl-9 mx-auto">
-          <h2 class="mb-4">Ready to get started? Sign up now!</h2>
+          <h2 class="mb-4">대표하는 키워드는 뭐라고 생각하나요?</h2>
         </div>
         <div class="col-md-10 col-lg-8 col-xl-7 mx-auto">
           <form>
             <div class="form-row">
               <div class="col-12 col-md-9 mb-2 mb-md-0">
-                <input type="email" class="form-control form-control-lg" placeholder="Enter your email...">
+                <input type="text" class="form-control form-control-lg" placeholder="당신이 생각하는 키워드는?" id="get_key">
               </div>
               <div class="col-12 col-md-3">
-                <button type="submit" class="btn btn-block btn-lg btn-primary">Sign up!</button>
+                <button type="text" class="btn btn-block btn-lg btn-primary" id="get_id"onclick="get_keyword()">등록</button>
               </div>
             </div>
           </form>
@@ -207,49 +367,7 @@
 
   <!-- Footer -->
   <footer class="footer bg-light">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-6 h-100 text-center text-lg-left my-auto">
-          <ul class="list-inline mb-2">
-            <li class="list-inline-item">
-              <a href="#">About</a>
-            </li>
-            <li class="list-inline-item">&sdot;</li>
-            <li class="list-inline-item">
-              <a href="#">Contact</a>
-            </li>
-            <li class="list-inline-item">&sdot;</li>
-            <li class="list-inline-item">
-              <a href="#">Terms of Use</a>
-            </li>
-            <li class="list-inline-item">&sdot;</li>
-            <li class="list-inline-item">
-              <a href="#">Privacy Policy</a>
-            </li>
-          </ul>
-          <p class="text-muted small mb-4 mb-lg-0">&copy; Your Website 2020. All Rights Reserved.</p>
-        </div>
-        <div class="col-lg-6 h-100 text-center text-lg-right my-auto">
-          <ul class="list-inline mb-0">
-            <li class="list-inline-item mr-3">
-              <a href="#">
-                <i class="fab fa-facebook fa-2x fa-fw"></i>
-              </a>
-            </li>
-            <li class="list-inline-item mr-3">
-              <a href="#">
-                <i class="fab fa-twitter-square fa-2x fa-fw"></i>
-              </a>
-            </li>
-            <li class="list-inline-item">
-              <a href="#">
-                <i class="fab fa-instagram fa-2x fa-fw"></i>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
+    <div id="chartdiv"></div>
   </footer>
 
   <!-- Bootstrap core JavaScript -->
