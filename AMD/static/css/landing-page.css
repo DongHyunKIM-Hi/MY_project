@@ -21,7 +21,7 @@ h6 {
 header.masthead {
   position: relative;
   background-color: #343a40;
-  background: url("../img/bg-masthead.jpg") no-repeat center center;
+  background: url("https://img.kr.news.samsung.com/kr/wp-content/uploads/2015/12/%ED%88%AC%EB%AA%A8%EB%A1%9C%EC%9A%B0%EC%97%90%EC%84%B8%EC%9D%B4%EC%9D%91%EB%8B%B5%ED%95%98%EB%9D%BC4.jpg") no-repeat center center;
   background-size: cover;
   padding-top: 8rem;
   padding-bottom: 8rem;
@@ -41,6 +41,9 @@ header.masthead h1 {
   font-size: 2rem;
 }
 
+section{
+  background-color: e2b87b;
+}
 @media (min-width: 768px) {
   header.masthead {
     padding-top: 12rem;
@@ -90,6 +93,7 @@ header.masthead h1 {
 .testimonials {
   padding-top: 7rem;
   padding-bottom: 7rem;
+  background-color: #e2b87b;
 }
 
 .testimonials .testimonial-item {
