@@ -1,9 +1,7 @@
 from pymongo import MongoClient 
 from flask import Flask, render_template, jsonify, request
 app = Flask(__name__)
-
-
-client = MongoClient('localhost', 27017)  # mongoDB는 27017 포트로 돌아갑니다.
+client = MongoClient('mongodb://hyundong_k:940dfg@13.125.220.235',27017)
 db = client.AMD  
 
 # HTML을 주는 부분
@@ -88,4 +86,4 @@ def keyword_post():
     return jsonify({'result': 'success'})
 
 if __name__ == '__main__':
-    app.run('localhost', port=5000, debug=True)
+    app.run('0.0.0.0', port=5000, debug=True)
