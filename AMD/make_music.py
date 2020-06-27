@@ -43,6 +43,7 @@ for generation in range(2000,2020): #2015년 부터 2019년까지 노래 순위 
             'rank': rank,
             'name': name,
             'singer' : singer,
-            'img_url' : img
+            'img_url' : img,
+            'like':0
         }
         db.music.insert_one(doc)
