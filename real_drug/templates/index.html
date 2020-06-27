@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Webpage Title -->
+    <title>의약품검색기</title>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+    <!-- 구글폰트 -->
+    <link href="https://fonts.googleapis.com/css?family=Stylish&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Do+Hyeon&display=swap" rel="stylesheet">
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('#orders-box').html('');
+            listing();
+        });
+// db에서 이름을 불러오는 함수
+        function drug_search() {
+            let name_give = $('#input_name').val()
+            $('#orders-box').empty()
+            $('#review_list').empty()
+            $.ajax({
+                type: "GET",
+                url: "/search?drug_name=" + name_give,
+                data: {},
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        let search_drug = response['search_result']
+                        // 이름 확인까지 잘됨
+                        let temp_html= `<tr>
+                                <td>${search_drug['name']}</td>
+                                <td><img src=${search_drug['image']}></td>
+                                <td>${search_drug['desc']}</td>
+                            </tr>`
+                            $('#orders-box').append(temp_html)
+                    }
+                }
+            });
+            $.ajax({
+                type: "GET",
+                url: "/review/list?drug_name=" + name_give,
+                data: {},
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        let search_drug_review = response['reviews']
+                        for (let i = 0; i < search_drug_review.length; i++) {
+                            let temp_html= `<tr>
+                                <td>${search_drug_review[i]['review']}</td>
+                            </tr>`
+                            $('#review_list').append(temp_html)
+                        }
+                    }
+                }
+            });        
+        }   
+        function make_review(){
+            let review = $('#review_make').val()
+            let name_give = $('#input_name').val()
+            alert(review+" 등록됬습니다")
+            $.ajax({
+                type: "POST",
+                url: "/review/make",
+                data: { drug_name: name_give, drug_review :review },
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        
+                    }
+                }
+            })
+            $('#review_list').empty()
+            $.ajax({
+                type: "GET",
+                url: "/review/list?drug_name=" + name_give,
+                data: {},
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        let search_drug_review = response['reviews']
+                        for (let i = 0; i < search_drug_review.length; i++) {
+                            let temp_html= `<tr>
+                                <td>${search_drug_review[i]['review']}</td>
+                            </tr>`
+                            $('#review_list').append(temp_html)
+                        }
+                    }
+                }
+            });    
+        } 
+    </script>
+
+    <style type="text/css">
+        * {
+            font-family: 'Do Hyeon', sans-serif;
+        }
+
+        .wrap {
+            width: 500px;
+            margin: auto;
+        }
+
+        .img {
+            background-image: url('https://previews.123rf.com/images/maxxyustas/maxxyustas1511/maxxyustas151100002/47858355-education-concept-books-and-textbooks-on-the-bookshelf-3d.jpg');
+            background-size: cover;
+            background-position: center;
+            width: 500px;
+            height: 300px;
+        }
+
+        .info {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .user-info {
+            margin: 20px 5px auto 5px;
+        }
+
+        h1,
+        h5 {
+            display: inline;
+        }
+
+        .order {
+            text-align: center;
+        }
+
+        .orders {
+            margin-top: 100px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+        <div class="img"></div>
+        <div class="info">
+            <h1>복용하실 의약품 정보를 검색해보세요!!</h1>
+        </div>
+        <div class="info">
+            <div class="input-group mb-3">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">약품이름</span>
+                    </div>
+                    <input type="text" class="form-control" id="input_name" aria-describedby="basic-addon3">
+                    <!-- 여기가 검색버튼 -->
+                    <div class="order">
+                        <button onclick="drug_search()" type="button" class="btn btn-primary">약품 검색하기</button>
+                    </div>
+                </div>
+                <div class="orders">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">의약품 이름</th>
+                                <th scope="col">성분</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orders-box">
+                           
+                        </tbody>
+                    </table>
+                </div>
+               
+            </div>
+            <div>
+                <span class="input-group-text">약품리뷰 등록하기</span>
+                <textarea id="review_make" cols="67" rows="5" placeholder="리뷰를 남겨주세요"></textarea>
+                <button onclick="make_review()" type="button" class="btn btn-primary">리뷰 등록하기</button>
+            </div>
+            <div class="orders">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">리뷰 보기</th>
+                        </tr>
+                    </thead>
+                    <tbody id="review_list">
+                       
+                    </tbody>
+                </table>
+            </div>
+</body>
+
+</html>
