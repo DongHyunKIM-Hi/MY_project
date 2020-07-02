@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>이 약 어때?</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <!-- OG TAGS -->
+    <meta property="og:title" content="이 약 어때?!" />
+    <meta property="og:description" content="가장 많이 팔리는 일반의약품의 정보를 찾아보고 복용 공유해보세요" />
+    <meta property="og:image" content="{{ url_for('static', filename='ogimage.png') }}" />
+
+
+    <!-- body -->
+</head>
+
+<script>
+    // 사용자가 약 이름을 클릭하면 그걸 print_info('약이름') 함수로 받아서 ajax로 ['GET']요청함. 받아온 데이터는 그대로 출력!
+    function print_info(name){
+        $('#main').empty();
+        $.ajax({
+            type: "GET",
+            url: "/search?drug_name="+name,
+            data: {},
+            success: function (response) {
+                let drug = response['search_result']
+                let f_name = drug['name']
+                let f_shape = drug['shape']
+                let f_ingrt = drug['ingrt']
+                let f_store = drug['store']
+                let f_effect = drug['effect']
+                let f_inst = drug['inst']
+                let f_url = drug['url']
+                let f_img = drug['img_url']
+                // 사진이 안나옴
+                let temp_html=`
+                <div class="card-body">
+                        <img class=" card-img-top img-fluid"
+                            style="margin-left: auto; margin-right: auto; display: block; border: 1px solid;"
+                            src="${f_img}"
+                            alt="">
+                        <h1 class="card-title">${f_name}</h1>
+                        <h3>외형정보</h3>
+                        <p>${f_ingrt} </p>
+                        <h3>성분정보</h3>
+                        <p>${f_inst}</p>
+                        <h3>저장방법</h3>
+                        <p>${f_store}</p>
+                        <h3>효능효과</h3>
+                        <p>${f_effect} </p>
+                        <a href="${f_url}
+                            target="_blank">자세한정보</a> 
+                    </div>`
+                    $('#resultdrug').append(temp_html)
+               }})
+    }
+</script>
+
+
+
+<body>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#" style="color:green;">이 약 어때?!💊</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#" style="color: royalblue;">Home - 이지만 현재는 예시 페이지</a></li>
+                <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#"
+                        style="color: royalblue;">1위 - 10위 <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><span class="btn btn-mini" onclick="print_info('까스활명수큐액')">까스활명수큐액</span></li>
+                        <li><span class="btn btn-mini" onclick="print_info('비맥스메타정')">비맥스메타정 </span></li>
+                        <li><span class="btn btn-mini" onclick="print_info('판피린큐액')">판피린큐액</span></li>
+                        <li><span class="btn btn-mini" onclick="print_info('플루콜드연질캡슐')">플루콜드연질캡슐</span></li>
+                        <li><span class="btn btn-mini" onclick="print_info('판콜에스내복액')">판콜에스내복액</span></li>
+                        <li><span class="btn btn-mini" onclick="print_info('케토톱플라스타')">케토톱플라스타</span></li>
+                        <li><span class="btn btn-mini" onclick="print_info('타이레놀')"> 타이레놀</span></li>
+                        <li><span class="btn btn-mini" onclick="print_info('광동경옥고')">광동경옥고</span></li>
+                        <li><span class="btn btn-mini" onclick="print_info('탁센 연질캡슐')">탁센 연질캡슐</span></li>
+                        <li><span class="btn btn-mini" onclick="print_info('잇치페이스트치약')">잇치페이스트치약</span></li>
+                    </ul>
+                </li>
+                <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#"
+                        style="color: royalblue;">11위 - 20위 <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><span class="btn btn-mini" onclick="print_info('임팩타민프리미엄')">임팩타민프리미엄</span></li>
+                        <li><span class="btn btn-mini" onclick="print_info('광동원탕')"> 광동원탕</span></li>
+                        <li><span class="btn btn-mini" onclick="print_info('이가탄에프')">이가탄에프</span></li>
+                        <li><span class="btn btn-mini" onclick="print_info('아로나민골드')">아로나민골드</span></li>
+                        <li><span class="btn btn-mini" onclick="print_info('노스카나겔')">노스카나겔</span></li>
+                        <li><span class="btn btn-mini" onclick="print_info('게보린')">게보린</span></li>
+                        <li><span class="btn btn-mini" onclick="print_info('인사돌플러스')">인사돌플러스</span></li>
+                        <li><span class="btn btn-mini" onclick="print_info('베나치오에프액')">베나치오에프액</span></li>
+                        <li><span class="btn btn-mini" onclick="print_info('테라플루 나이트타임')">테라플루 나이트타임</span></li>
+                        <li><span class="btn btn-mini" onclick="print_info('엑세라민엑소정')">엑세라민엑소정</span></li>
+                    </ul>
+                </li>
+                <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#"
+                        style="color: royalblue;">21위 - 30위 <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><span class="btn btn-mini" onclick="print_info('텐텐츄정')">텐텐츄정</span></li>
+                        <li><span class="btn btn-mini" onclick="print_info('벤포벨정')">벤포벨정</span></li>
+                        <li><span class="btn btn-mini" onclick="print_info('머시론정')">머시론정</span></li>
+                        <li><span class="btn btn-mini" onclick="print_info('우루사')">우루사</span></li>
+                        <li><span class="btn btn-mini" onclick="print_info('아이톡 점안액')">아이톡 점안액</span></li>
+                        <li><span class="btn btn-mini" onclick="print_info('광동우황청심원현탁액')">광동우황청심원현탁액</span></li>
+                        <li><span class="btn btn-mini" onclick="print_info('광동우황청심원환(사향)')">광동우황청심원환(사향)</span></li>
+                        <li><span class="btn btn-mini" onclick="print_info('둘코락스-에스')">둘코락스-에스</span></li>
+                        <li><span class="btn btn-mini" onclick="print_info('후시딘연고')">후시딘연고</span></li>
+                        <li><span class="btn btn-mini" onclick="print_info('겔포스엠현탁액')">겔포스엠현탁액</span></li>
+                    </ul>
+                </li>
+                <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#"
+                        style="color: royalblue;">31위 - 40위 <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><span class="btn btn-mini" onclick="print_info('비판텐연고')">비판텐연고</span></li>
+                        <li><span class="btn btn-mini" onclick="print_info('마그비액티브정')">마그비액티브정</span></li>
+                        <li><span class="btn btn-mini" onclick="print_info('경방갈근탕액')">경방갈근탕액</span></li>
+                        <li><span class="btn btn-mini" onclick="print_info('인사돌')">인사돌</span></li>
+                        <li><span class="btn btn-mini" onclick="print_info('코앤쿨나잘스프레이')">코앤쿨나잘스프레이</span></li>
+                        <li><span class="btn btn-mini" onclick="print_info('신신파스아렉스')">신신파스아렉스</span></li>
+                        <li><span class="btn btn-mini" onclick="print_info('오트리빈멘톨0.1%분무제')">오트리빈멘톨0.1%분무제</span></li>
+                        <li><span class="btn btn-mini" onclick="print_info('광동우황청심원현탁액')">광동우황청심원현탁액</span></li>
+                        <li><span class="btn btn-mini" onclick="print_info('복합우루사연질캡슐')">복합우루사연질캡슐</span></li>
+                        <li><span class="btn btn-mini" onclick="print_info('이지엔6 이브연질캡슐')">이지엔6 이브연질캡슐</span></li>
+                    </ul>
+                </li>
+                <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#"
+                        style="color: royalblue;">41위 - 50위 <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><span class="btn btn-mini" onclick="print_info('챔프시럽')">챔프시럽</span></li>
+                        <li><span class="btn btn-mini" onclick="print_info('테라플루콜드코프나이트')">테라플루콜드코프나이트</span></li>
+                        <li><span class="btn btn-mini" onclick="print_info('테라플루데이타임건조시럽')">테라플루데이타임건조시럽</span></li>
+                        <li><span class="btn btn-mini" onclick="print_info('이지엔6프로연질캡슐')">이지엔6프로연질캡슐</span></li>
+                        <li><span class="btn btn-mini" onclick="print_info('아로나민실버프리미엄')">아로나민실버프리미엄</span></li>
+                        <li><span class="btn btn-mini" onclick="print_info('훼스탈플러스')">훼스탈플러스</span></li>
+                        <li><span class="btn btn-mini" onclick="print_info('광동쌍화탕')">광동쌍화탕</span></li>
+                        <li><span class="btn btn-mini" onclick="print_info('화이투벤큐연질캡슐')">화이투벤큐연질캡슐</span></li>
+                        <li><span class="btn btn-mini" onclick="print_info('액티리버모닝연질캅셀')">액티리버모닝연질캅셀</span></li>
+                        <li><span class="btn btn-mini" onclick="print_info('프렌즈아이드롭촉촉한쿨')">프렌즈아이드롭촉촉한쿨</span></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <!-- nav bar 정보: https://www.w3schools.com/bootstrap/bootstrap_navbar.asp -->
+    <!-- 바디 전체에 틀을 씌우면 좋겠음 -->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-9">
+                <div class="card mt-4" id="resultdrug">
+                    <!-- <div class="card-body">
+                        <img class=" card-img-top img-fluid"
+                            style="margin-left: auto; margin-right: auto; display: block; border: 1px solid;"
+                            src="https://dbscthumb-phinf.pstatic.net/3323_000_2/20160623171543053_GM884S0T6.jpg/A11A4380A004701.jpg?type=w450_fst"
+                            alt="">
+                        <h1 class="card-title">타이레놀정500mg</h1>
+                        <h3>외형정보</h3>
+                        <p>· 성상 : 백색의 장방형 필름코팅정제 · 제형 : 필름코팅정 · 모양 : 장방형 · 색상 : 하양 · 식별표기 : (앞)TYLENOL, (뒤)500 </p>
+                        <h3>성분정보</h3>
+                        <p>아세트아미노펜 500mg </p>
+                        <h3>저장방법</h3>
+                        <p>밀폐용기, 실온보관(1-30℃) </p>
+                        <h3>효능효과</h3>
+                        <p>1. 주효능·효과 감기로 인한 발열 및 동통(통증), 두통, 신경통, 근육통, 월경통, 염좌통(삔 통증) 2. 다음 질환에도 사용할 수 있다. 치통, 관절통, 류마티양
+                            동통(통증) </p>
+                        <a href="https://terms.naver.com/entry.nhn?docId=2140308&cid=51000&categoryId=51000"
+                            target="_blank">자세한정보</a> 
+                    </div> -->
+                </div>
+                <!-- 리뷰에 구매한 가격, 후기, 별점 등을 넣으면 좋겠음 -->
+                <div class="card card-outline-secondary my-4">
+                    <div class="card-header">
+                        Product Reviews
+                    </div>
+                    <div class="card-body">
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis et enim aperiam inventore,
+                            similique necessitatibus neque non! Doloribus, modi sapiente laboriosam aperiam fugiat
+                            laborum. Sequi mollitia, necessitatibus quae sint natus.</p>
+                        <small class="text-muted">Posted by Anonymous on 3/1/17</small>
+                        <hr>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis et enim aperiam inventore,
+                            similique necessitatibus neque non! Doloribus, modi sapiente laboriosam aperiam fugiat
+                            laborum. Sequi mollitia, necessitatibus quae sint natus.</p>
+                        <small class="text-muted">Posted by Anonymous on 3/1/17</small>
+                        <hr>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis et enim aperiam inventore,
+                            similique necessitatibus neque non! Doloribus, modi sapiente laboriosam aperiam fugiat
+                            laborum. Sequi mollitia, necessitatibus quae sint natus.</p>
+                        <small class="text-muted">Posted by Anonymous on 3/1/17</small>
+                        <hr>
+                        <a href="#" class="btn btn-success">Leave a Review</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Footer -->
+    <footer class="py-5 bg-dark">
+        <div class="container">
+            <p class="m-0 text-center text-white">Copyright &copy; Your Website 2020</p>
+        </div>
+        <!-- /.container -->
+    </footer>
+    <!-- Bootstrap core JavaScript -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
